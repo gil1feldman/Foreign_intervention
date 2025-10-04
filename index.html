@@ -224,7 +224,7 @@
       return true;
     }
 
-    // Submit
+    // Submit with no-cors workaround
     formEl.addEventListener('submit', function(e) {
       e.preventDefault();
       const responseEl = document.getElementById('responseMessage');
@@ -244,28 +244,16 @@
       responseEl.style.display = 'none';
       responseEl.className = '';
 
-      fetch(SCRIPT_URL, { method: 'POST', body: formData })
-        .then(r => r.text())
-        .then(txt => {
-          const t = (txt || '').trim().toUpperCase();
-          if (t === 'OK') {
-            responseEl.innerText = '✅ נשמר בהצלחה.';
-            responseEl.className = 'success';
-            responseEl.style.display = 'block';
-            formEl.reset();
-            const d = new Date();
-            document.getElementById('dateInput').value = d.toISOString().slice(0,10);
-            responseEl.scrollIntoView({ behavior: 'smooth' });
-          } else if (t.includes('MISSING') || t.includes('INVALID')) {
-            responseEl.innerText = '❌ שדות חובה חסרים או ערכים שגויים. בדוק והגש שוב.';
-            responseEl.className = 'error';
-            responseEl.style.display = 'block';
-          } else {
-            responseEl.innerText = '❌ אירעה שגיאה בשליחה. ראה קונסול לפרטים.';
-            responseEl.className = 'error';
-            responseEl.style.display = 'block';
-            console.error('server response:', txt);
-          }
+      fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+          // ב-no-cors אין תשובה לקרוא, נציג הצלחה אופטימית
+          responseEl.innerText = '✅ נשלח. אפשר לוודא שנוספה שורה בגיליון.';
+          responseEl.className = 'success';
+          responseEl.style.display = 'block';
+          formEl.reset();
+          const d = new Date();
+          document.getElementById('dateInput').value = d.toISOString().slice(0,10);
+          responseEl.scrollIntoView({ behavior: 'smooth' });
         })
         .catch(err => {
           responseEl.innerText = '❌ אירעה שגיאה בשליחה. בדוק חיבור/הרשאות/פריסה.';
