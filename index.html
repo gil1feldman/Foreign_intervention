@@ -128,7 +128,7 @@
 
   <script>
     // ====== CONFIG ======
-    const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhEZBuTIFfHVeO8YeGFXf1vcGlyfjT-nAf69qExtukkL6zKyrUV5VwoXOHFDnzlBHSSMZt99NNZ-Uk12a7cjPibjbSzNHSshZGW4IqCYERqC5BSvg69W8-T6N-pfI57CiVttRYUSi1ZKVQQotglDrDTukwHUSt6ל41QHda-KDVgZWjmoXszJzLVo6SYSFZnRRoiM04M9PqCmf0pZfEbmYA5QknoEf-JV8aLXrYaK7vcL71tPDs-RfOBau8FYIMfuOipWE3QKnDVCjhuzLJN5u1yC8Q2ew&lib=M2IuC9PqbOC1fAVcuVIX3CTZqqPiN-w-P';
+    const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhEZBuTIFfHVeO8YeGFXf1vcGlyfjT-nAf69qExtukkL6zKyrUV5VwoXOHFDnzlBHSSMZt99NNZ-Uk12a7cjPibjbSzNHSshZGW4IqCYERqC5BSvg69W8-T6N-pfI57CiVttRYUSi1ZKVQQotglDrDTukwHUSt6L41QHda-KDVgZWjmoXszJzLVo6SYSFZnRRoiM04M9PqCmf0pZfEbmYA5QknoEf-JV8aLXrYaK7vcL71tPDs-RfOBau8FYIMfuOipWE3QKnDVCjhuzLJN5u1yC8Q2ew&lib=M2IuC9PqbOC1fAVcuVIX3CTZqqPiN-w-P';
 
     // Detect file:// origin
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
@@ -136,7 +136,6 @@
     const formEl = document.getElementById('form');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Warn if opened from file://
     if (isFileOrigin) {
       corsWarning.style.display = 'block';
       corsWarning.innerHTML =
@@ -147,7 +146,7 @@
         '<br>• או פרסם ב־GitHub Pages / Netlify.';
     }
 
-    // Set default date to today (local) and max to today
+    // Default date to today & prevent future
     (function setDefaultDate(){
       const d = new Date();
       const yyyy = d.getFullYear();
@@ -155,13 +154,9 @@
       const dd = String(d.getDate()).padStart(2, '0');
       const today = `${yyyy}-${mm}-${dd}`;
       const dateInput = document.getElementById('dateInput');
-      if (dateInput) {
-        dateInput.max = today;
-        if (!dateInput.value) dateInput.value = today;
-      }
+      if (dateInput) { dateInput.max = today; if (!dateInput.value) dateInput.value = today; }
     })();
 
-    // Helper to show error message block
     function showError(msg) {
       const responseEl = document.getElementById('responseMessage');
       responseEl.innerText = '❌ ' + msg;
@@ -170,7 +165,7 @@
       responseEl.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Load intervention types (defensive)
+    // Load intervention types
     function loadTypes() {
       const select = document.getElementById('typeSelect');
       if (isFileOrigin) {
@@ -210,7 +205,6 @@
     }
     loadTypes();
 
-    // Client validations
     function validateForm() {
       const responseEl = document.getElementById('responseMessage');
       responseEl.style.display = 'none';
@@ -224,16 +218,13 @@
       const today = new Date(); today.setHours(0,0,0,0);
       const picked = new Date(dateVal); picked.setHours(0,0,0,0);
       if (picked > today) { showError('תאריך עתידי אינו מותר.'); return false; }
-
       if (!/^https?:\/\/.+/i.test(linkVal)) { showError('הקישור חייב להתחיל ב־http או https.'); return false; }
-
-      if (!summaryVal || summaryVal.length < 5) { showError('תיאור קצר קצר מדי. נא להזין לפחות 5 תווים.'); return false; }
+      if (!summaryVal || summaryVal.length < 5) { showError('תיאור קצר קצר מדי.'); return false; }
       if (!typeVal) { showError('בחר סוג התערבות מהרשימה.'); return false; }
       return true;
     }
 
-    // Submit handler
-    const formEl = document.getElementById('form');
+    // Submit
     formEl.addEventListener('submit', function(e) {
       e.preventDefault();
       const responseEl = document.getElementById('responseMessage');
