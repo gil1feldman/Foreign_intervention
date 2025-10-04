@@ -30,6 +30,7 @@
     #responseMessage.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
     #responseMessage.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
     .warning { margin:16px 0; padding:12px; border-radius:8px; background:#fff3cd; color:#856404; border:1px solid #ffeeba; display:none; }
+    .hint { font-weight:normal; color:#666; font-size:13px; }
     @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
     @media (max-width:480px){
       .banner h1{ font-size:16px; }
@@ -40,12 +41,14 @@
   </style>
 </head>
 <body>
+  <!-- Banner -->
   <div class="banner">
     <div class="info-button" onclick="document.getElementById('infoModal').style.display='block'">i</div>
     <a href="#" target="_blank" rel="noopener" class="table-button" title="מעבר לטבלת הנתונים">📊</a>
     <h1>תיעוד התערבויות/תקיפות</h1>
   </div>
 
+  <!-- Info Modal -->
   <div id="infoModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="document.getElementById('infoModal').style.display='none'">✖</span>
@@ -59,17 +62,20 @@
   <div class="container">
     <div id="corsWarning" class="warning"></div>
 
-    <form id="form">
+    <!-- Form -->
+    <form id="form" novalidate>
       <label>תאריך:
         <input type="date" name="date" id="dateInput" required>
+        <span class="hint">לא ניתן לבחור תאריך עתידי.</span>
       </label>
 
       <label>קישור:
-        <input type="url" name="link" required placeholder="https://">
+        <input type="url" name="link" id="linkInput" required placeholder="https://example.com" pattern="https?://.+">
+        <span class="hint">חובה http או https.</span>
       </label>
 
       <label>תיאור קצר:
-        <textarea name="summary" required placeholder="תיאור תמציתי של האירוע"></textarea>
+        <textarea name="summary" id="summaryInput" required placeholder="תיאור תמציתי של האירוע" minlength="5" maxlength="500"></textarea>
       </label>
 
       <label>סוג התערבות:
@@ -122,7 +128,7 @@
 
   <script>
     // ====== CONFIG ======
-    const SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFnfNadVWJ57lxfjPIxP4oYuxetME8S7YnileyDZdK_hrhlO17s9hClw7oGU-qG0wB/exec';
 
     // Detect file:// origin
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
@@ -135,13 +141,13 @@
       corsWarning.style.display = 'block';
       corsWarning.innerHTML =
         '⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות ל־Apps Script (CORS). ' +
-        'כדי לעבוד כרגיל - פתח דרך שרת:' +
+        'כדי לעבוד כרגיל ‐ פתח דרך שרת:' +
         '<br>• Python: <code>python -m http.server 5500</code> ואז גלוש ל־<code>http://localhost:5500/</code>' +
         '<br>• Node: <code>npx serve</code> או תוסף VS Code Live Server' +
         '<br>• או פרסם ב־GitHub Pages / Netlify.';
     }
 
-    // Set default date to today (local)
+    // Set default date to today (local) and max to today
     (function setDefaultDate(){
       const d = new Date();
       const yyyy = d.getFullYear();
@@ -149,14 +155,17 @@
       const dd = String(d.getDate()).padStart(2, '0');
       const today = `${yyyy}-${mm}-${dd}`;
       const dateInput = document.getElementById('dateInput');
-      if (dateInput && !dateInput.value) dateInput.value = today;
+      if (dateInput) {
+        dateInput.max = today;
+        if (!dateInput.value) dateInput.value = today;
+      }
     })();
 
     // Load intervention types
     function loadTypes() {
       const select = document.getElementById('typeSelect');
       if (isFileOrigin) {
-        select.innerHTML = '<option value="">לא ניתן לטעון מ־file:// - פתח דרך http/https</option>';
+        select.innerHTML = '<option value="">לא ניתן לטעון מ־file:// ‐ פתח דרך http/https</option>';
         submitBtn.disabled = true;
         return;
       }
@@ -178,6 +187,51 @@
     }
     loadTypes();
 
+    // Client validations
+    function validateForm() {
+      const responseEl = document.getElementById('responseMessage');
+      responseEl.style.display = 'none';
+      responseEl.className = '';
+
+      const dateVal = document.getElementById('dateInput').value;
+      const linkVal = document.getElementById('linkInput').value.trim();
+      const summaryVal = document.getElementById('summaryInput').value.trim();
+      const typeVal = document.getElementById('typeSelect').value;
+
+      // Date not in the future
+      const today = new Date(); today.setHours(0,0,0,0);
+      const picked = new Date(dateVal); picked.setHours(0,0,0,0);
+      if (picked > today) {
+        showError('תאריך עתידי אינו מותר.');
+        return false;
+      }
+
+      // Link must start with http/https
+      if (!/^https?:\/\/.+/i.test(linkVal)) {
+        showError('הקישור חייב להתחיל ב־http או https.');
+        return false;
+      }
+
+      // Basic checks
+      if (!summaryVal || summaryVal.length < 5) {
+        showError('תיאור קצר קצר מדי. נא להזין לפחות 5 תווים.');
+        return false;
+      }
+      if (!typeVal) {
+        showError('בחר סוג התערבות מהרשימה.');
+        return false;
+      }
+      return true;
+    }
+
+    function showError(msg) {
+      const responseEl = document.getElementById('responseMessage');
+      responseEl.innerText = '❌ ' + msg;
+      responseEl.className = 'error';
+      responseEl.style.display = 'block';
+      responseEl.scrollIntoView({ behavior: 'smooth' });
+    }
+
     // Submit handler
     formEl.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -190,6 +244,8 @@
         responseEl.style.display = 'block';
         return;
       }
+
+      if (!validateForm()) return;
 
       const formData = new FormData(formEl);
       inputs.forEach(el => el.disabled = true);
@@ -206,7 +262,8 @@
             responseEl.style.display = 'block';
             formEl.reset();
             // Restore default date after reset
-            document.getElementById('dateInput').value = (new Date()).toISOString().slice(0,10);
+            const d = new Date();
+            document.getElementById('dateInput').value = d.toISOString().slice(0,10);
             responseEl.scrollIntoView({ behavior: 'smooth' });
           } else if (t.includes('MISSING') || t.includes('INVALID')) {
             responseEl.innerText = '❌ שדות חובה חסרים או ערכים שגויים. בדוק והגש שוב.';
