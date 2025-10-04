@@ -128,7 +128,7 @@
 
   <script>
     // ====== CONFIG ======
-    const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhEZBuTIFfHVeO8YeGFXf1vcGlyfjT-nAf69qExtukkL6zKyrUV5VwoXOHFDnzlBHSSMZt99NNZ-Uk12a7cjPibjbSzNHSshZGW4IqCYERqC5BSvg69W8-T6N-pfI57CiVttRYUSi1ZKVQQotglDrDTukwHUSt6L41QHda-KDVgZWjmoXszJzLVo6SYSFZnRRoiM04M9PqCmf0pZfEbmYA5QknoEf-JV8aLXrYaK7vcL71tPDs-RfOBau8FYIMfuOipWE3QKnDVCjhuzLJN5u1yC8Q2ew&lib=M2IuC9PqbOC1fAVcuVIX3CTZqqPiN-w-P';
+    const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhEZBuTIFfHVeO8YeGFXf1vcGlyfjT-nAf69qExtukkL6zKyrUV5VwoXOHFDnzlBHSSMZt99NNZ-Uk12a7cjPibjbSzNHSshZGW4IqCYERqC5BSvg69W8-T6N-pfI57CiVttRYUSi1ZKVQQotglDrDTukwHUSt6ל41QHda-KDVgZWjmoXszJzLVo6SYSFZnRRoiM04M9PqCmf0pZfEbmYA5QknoEf-JV8aLXrYaK7vcL71tPDs-RfOBau8FYIMfuOipWE3QKnDVCjhuzLJN5u1yC8Q2ew&lib=M2IuC9PqbOC1fAVcuVIX3CTZqqPiN-w-P';
 
     // Detect file:// origin
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
@@ -161,7 +161,16 @@
       }
     })();
 
-    // Load intervention types
+    // Helper to show error message block
+    function showError(msg) {
+      const responseEl = document.getElementById('responseMessage');
+      responseEl.innerText = '❌ ' + msg;
+      responseEl.className = 'error';
+      responseEl.style.display = 'block';
+      responseEl.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Load intervention types (defensive)
     function loadTypes() {
       const select = document.getElementById('typeSelect');
       if (isFileOrigin) {
@@ -170,10 +179,23 @@
         return;
       }
       fetch(SCRIPT_URL)
-        .then(r => r.json())
-        .then(list => {
+        .then(async r => {
+          const text = await r.text();
+          let payload;
+          try { payload = JSON.parse(text); }
+          catch {
+            console.error('Unexpected non-JSON response:', text.slice(0, 300));
+            throw new Error('שרת החזיר תגובה לא תקינה (לא JSON). בדוק את הקוד ב־Apps Script ואת SHEET_ID.');
+          }
+          if (!Array.isArray(payload)) {
+            console.error('Unexpected payload object:', payload);
+            const note = payload && payload.error ? 'שגיאת שרת: ' + payload.error : 'מבנה נתונים לא צפוי';
+            select.innerHTML = '<option value="">שגיאה בטעינה</option>';
+            showError(note);
+            return;
+          }
           select.innerHTML = '<option value="">בחר...</option>';
-          (list || []).forEach(v => {
+          payload.forEach(v => {
             const opt = document.createElement('option');
             opt.value = v;
             opt.textContent = v;
@@ -183,6 +205,7 @@
         .catch(err => {
           console.error('שגיאה בטעינת סוגי התערבות:', err);
           select.innerHTML = '<option value="">שגיאה בטעינה</option>';
+          showError('שגיאה בטעינת סוגי התערבות. בדוק את ה־URL ואת הפריסה.');
         });
     }
     loadTypes();
@@ -198,41 +221,19 @@
       const summaryVal = document.getElementById('summaryInput').value.trim();
       const typeVal = document.getElementById('typeSelect').value;
 
-      // Date not in the future
       const today = new Date(); today.setHours(0,0,0,0);
       const picked = new Date(dateVal); picked.setHours(0,0,0,0);
-      if (picked > today) {
-        showError('תאריך עתידי אינו מותר.');
-        return false;
-      }
+      if (picked > today) { showError('תאריך עתידי אינו מותר.'); return false; }
 
-      // Link must start with http/https
-      if (!/^https?:\/\/.+/i.test(linkVal)) {
-        showError('הקישור חייב להתחיל ב־http או https.');
-        return false;
-      }
+      if (!/^https?:\/\/.+/i.test(linkVal)) { showError('הקישור חייב להתחיל ב־http או https.'); return false; }
 
-      // Basic checks
-      if (!summaryVal || summaryVal.length < 5) {
-        showError('תיאור קצר קצר מדי. נא להזין לפחות 5 תווים.');
-        return false;
-      }
-      if (!typeVal) {
-        showError('בחר סוג התערבות מהרשימה.');
-        return false;
-      }
+      if (!summaryVal || summaryVal.length < 5) { showError('תיאור קצר קצר מדי. נא להזין לפחות 5 תווים.'); return false; }
+      if (!typeVal) { showError('בחר סוג התערבות מהרשימה.'); return false; }
       return true;
     }
 
-    function showError(msg) {
-      const responseEl = document.getElementById('responseMessage');
-      responseEl.innerText = '❌ ' + msg;
-      responseEl.className = 'error';
-      responseEl.style.display = 'block';
-      responseEl.scrollIntoView({ behavior: 'smooth' });
-    }
-
     // Submit handler
+    const formEl = document.getElementById('form');
     formEl.addEventListener('submit', function(e) {
       e.preventDefault();
       const responseEl = document.getElementById('responseMessage');
@@ -261,7 +262,6 @@
             responseEl.className = 'success';
             responseEl.style.display = 'block';
             formEl.reset();
-            // Restore default date after reset
             const d = new Date();
             document.getElementById('dateInput').value = d.toISOString().slice(0,10);
             responseEl.scrollIntoView({ behavior: 'smooth' });
