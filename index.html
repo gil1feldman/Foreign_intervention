@@ -3,196 +3,186 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>תיעוד חרמות נגד מדינת ישראל</title>
+  <title>תיעוד התערבויות/תקיפות</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      direction: rtl;
-      background: #f9f9f9;
-      padding: 0;
-      margin: 0;
-    }
-    .banner {
-      background-color: #003366;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-      border-radius: 0 0 12px 12px;
-      position: relative;
-    }
-    .banner h1 { font-size: 20px; margin: 5px 0 0 0; }
-    .info-button {
-      position: absolute; top: 10px; left: 10px; width: 26px; height: 26px;
-      background-color: #00aaff; color: white; font-size: 18px; font-weight: bold;
-      border-radius: 6px; text-align: center; line-height: 26px; cursor: pointer;
-    }
-    .table-button {
-      position: absolute; top: 10px; right: 10px; background-color: #e0ecf8; color: #1a3969;
-      padding: 4px 8px; font-size: 16px; border-radius: 6px; text-decoration: none; border: 1px solid #b6d0ea;
-    }
-    .table-button:hover { background-color: #d2e4f5; }
-
-    .modal { display: none; position: fixed; z-index: 1000; right: 0; top: 0; width: 100%; height: 100%;
-      overflow: auto; background-color: rgba(0,0,0,0.5); }
-    .modal-content {
-      background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 12px;
-      width: 90%; max-width: 500px; direction: rtl; font-size: 16px; line-height: 1.6;
-    }
-    .close { float: left; font-size: 24px; font-weight: bold; color: #888; cursor: pointer; }
-
-    .container { padding: 20px; width: 90%; max-width: 700px; margin: auto; }
-    form { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    label { display: block; margin-top: 15px; font-weight: bold; }
+    body { font-family: Arial, sans-serif; direction: rtl; background: #f9f9f9; margin:0; }
+    .banner { background:#003366; color:#fff; padding:12px 20px; text-align:center; border-radius:0 0 12px 12px; position:relative; }
+    .banner h1 { font-size:20px; margin:6px 0 0 0; }
+    .info-button { position:absolute; top:10px; left:10px; width:26px; height:26px; background:#00aaff; color:#fff;
+      font-size:18px; font-weight:bold; border-radius:6px; text-align:center; line-height:26px; cursor:pointer; }
+    .table-button { position:absolute; top:10px; right:10px; background:#e0ecf8; color:#1a3969; padding:4px 8px;
+      font-size:16px; border-radius:6px; text-decoration:none; border:1px solid #b6d0ea; }
+    .table-button:hover { background:#d2e4f5; }
+    .modal { display:none; position:fixed; z-index:1000; right:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+    .modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:12px; width:90%; max-width:520px; direction:rtl; font-size:16px; line-height:1.6; }
+    .close { float:left; font-size:24px; font-weight:bold; color:#888; cursor:pointer; }
+    .container { padding:20px; width:90%; max-width:760px; margin:auto; }
+    form { background:#fff; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+    label { display:block; margin-top:14px; font-weight:bold; }
     input[type="text"], input[type="url"], input[type="date"], select, textarea {
-      width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; font-size: 16px;
+      width:100%; padding:10px; margin-top:6px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; font-size:16px;
     }
-    textarea { resize: vertical; min-height: 100px; }
-    button {
-      width: 100%; margin-top: 20px; padding: 12px; background-color: #003366; color: white;
-      border: none; border-radius: 6px; cursor: pointer; font-size: 16px;
-    }
-    button:disabled { background-color: #ccc; cursor: not-allowed; }
-    button:hover:not(:disabled) { background-color: #002855; }
-
-    #responseMessage {
-      margin-top: 20px; font-weight: bold; text-align: center; padding: 12px; border-radius: 8px;
-      font-size: 16px; display: none; animation: fadeIn 0.5s ease-in-out;
-    }
-    #responseMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    #responseMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-    .warning {
-      margin: 16px 0; padding: 12px; border-radius: 8px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba;
-      display: none;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 480px) {
-      .banner h1 { font-size: 16px; }
-      .info-button { top: 8px; left: 8px; width: 24px; height: 24px; font-size: 16px; line-height: 24px; }
-      .table-button { top: 8px; right: 8px; font-size: 14px; padding: 3px 6px; }
-      input, select, textarea, button { font-size: 14px; }
+    textarea { resize:vertical; min-height:90px; }
+    button { width:100%; margin-top:20px; padding:12px; background:#003366; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:16px; }
+    button:disabled { background:#ccc; cursor:not-allowed; }
+    button:hover:not(:disabled) { background:#002855; }
+    #responseMessage { margin-top:20px; font-weight:bold; text-align:center; padding:12px; border-radius:8px; font-size:16px; display:none; animation:fadeIn 0.5s ease-in-out; }
+    #responseMessage.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+    #responseMessage.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+    .warning { margin:16px 0; padding:12px; border-radius:8px; background:#fff3cd; color:#856404; border:1px solid #ffeeba; display:none; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+    @media (max-width:480px){
+      .banner h1{ font-size:16px; }
+      .info-button{ top:8px; left:8px; width:24px; height:24px; font-size:16px; line-height:24px; }
+      .table-button{ top:8px; right:8px; font-size:14px; padding:3px 6px; }
+      input, select, textarea, button{ font-size:14px; }
     }
   </style>
 </head>
 <body>
   <div class="banner">
     <div class="info-button" onclick="document.getElementById('infoModal').style.display='block'">i</div>
-    <!-- עדכון: כפתור הטבלה מצביע לעמוד ה־GitHub Pages שלך -->
-    <a href="https://gil1feldman.github.io/BDS_Tracker/" target="_blank" rel="noopener" class="table-button" title="מעבר לטבלת הידיעות">📊</a>
-    <h1>תיעוד ידיעות על חרמות נגד מדינת ישראל</h1>
+    <a href="#" target="_blank" rel="noopener" class="table-button" title="מעבר לטבלת הנתונים">📊</a>
+    <h1>תיעוד התערבויות/תקיפות</h1>
   </div>
 
   <div id="infoModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="document.getElementById('infoModal').style.display='none'">✖</span>
       <h3>ℹ️ איך ממלאים?</h3>
-      <p>1. <strong>בחרו את הנושא</strong> שהידיעה נוגעת אליו.</p>
-      <p>2. <strong>סמנו את ההשפעה</strong> בהתאם לעוצמה.</p>
-      <p>3. <strong>הדביקו קישור</strong> לידיעה.</p>
-      <p>4. אפשר להוסיף שם/תאריך/הערות.</p>
+      <p>1. מלא תאריך, קישור ותיאור קצר.</p>
+      <p>2. בחר סוג התערבות מהרשימה.</p>
+      <p>3. השלם את שאר השדות ושמור.</p>
     </div>
   </div>
 
   <div class="container">
     <div id="corsWarning" class="warning"></div>
 
-    <form id="newsForm">
-      <label>הנושא הרלוונטי:
-        <select name="topic" id="topicSelect" required>
-          <option value="">טוען נושאים...</option>
+    <form id="form">
+      <label>תאריך:
+        <input type="date" name="date" id="dateInput" required>
+      </label>
+
+      <label>קישור:
+        <input type="url" name="link" required placeholder="https://">
+      </label>
+
+      <label>תיאור קצר:
+        <textarea name="summary" required placeholder="תיאור תמציתי של האירוע"></textarea>
+      </label>
+
+      <label>סוג התערבות:
+        <select name="type" id="typeSelect" required>
+          <option value="">טוען...</option>
         </select>
       </label>
 
-      <label>השפעת הידיעה על המאמץ / החרמה:
+      <label>הגוף התוקף:
+        <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון">
+      </label>
+
+      <label>הגוף המותקף:
+        <input type="text" name="target" placeholder="ארגון/גוף/יעד">
+      </label>
+
+      <label>שימוש ב-AI:
+        <select name="ai" required>
+          <option value="כן">כן</option>
+          <option value="לא" selected>לא</option>
+        </select>
+      </label>
+
+      <label>מידת השפעה:
         <select name="impact" required>
-          <option value="מחלישה מאוד">מחלישה מאוד</option>
-          <option value="מחלישה קצת">מחלישה קצת</option>
-          <option value="מחזקת קצת">מחזקת קצת</option>
-          <option value="מחזקת מאוד">מחזקת מאוד</option>
+          <option value="נמוך">נמוך</option>
+          <option value="בינוני" selected>בינוני</option>
+          <option value="גבוה">גבוה</option>
         </select>
       </label>
 
-      <label>קישור לידיעה:
-        <input type="url" name="link" required placeholder="הדבק כאן את הקישור">
+      <label>האם קשור לבחירות:
+        <select name="elections" required>
+          <option value="כן">כן</option>
+          <option value="לא" selected>לא</option>
+        </select>
       </label>
 
-      <label>מוסיף הידיעה:
-        <input type="text" name="submitter" placeholder="הכנס שם או כינוי">
+      <label>האם קשור לישראל/יהודים:
+        <select name="israel" required>
+          <option value="כן">כן</option>
+          <option value="לא" selected>לא</option>
+        </select>
       </label>
 
-      <label>תאריך המידע (אם שונה מהיום):
-        <input type="date" name="info_date">
-      </label>
-
-      <label>פרשנות / הערות:
-        <textarea name="comments" placeholder="הקלד כאן כל דבר נוסף..."></textarea>
-      </label>
-
-      <button type="submit" id="submitBtn">שלח</button>
+      <button type="submit" id="submitBtn">שליחה</button>
       <p id="responseMessage"></p>
     </form>
   </div>
 
   <script>
     // ====== CONFIG ======
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz71CXSrcIO_i_aoFK1pjj0ef5_evp9Zcl0pxbpRH3X3-u558kVT_nq7u0F94Yxfgrf/exec';
+    const SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
 
-    // זיהוי ריצה מקובץ מקומי (גורם לחסימת CORS)
+    // Detect file:// origin
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
-
     const corsWarning = document.getElementById('corsWarning');
-    const formEl = document.getElementById('newsForm');
+    const formEl = document.getElementById('form');
     const submitBtn = document.getElementById('submitBtn');
 
+    // Warn if opened from file://
     if (isFileOrigin) {
       corsWarning.style.display = 'block';
-      corsWarning.innerHTML = '⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות ל־Apps Script (CORS). ' +
-        'כדי לעבוד כרגיל ‐ פתח את הקובץ דרך שרת: ' +
+      corsWarning.innerHTML =
+        '⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות ל־Apps Script (CORS). ' +
+        'כדי לעבוד כרגיל - פתח דרך שרת:' +
         '<br>• Python: <code>python -m http.server 5500</code> ואז גלוש ל־<code>http://localhost:5500/</code>' +
         '<br>• Node: <code>npx serve</code> או תוסף VS Code Live Server' +
         '<br>• או פרסם ב־GitHub Pages / Netlify.';
     }
 
-    // טעינת נושאים
-    function loadTopics() {
-      const select = document.getElementById('topicSelect');
+    // Set default date to today (local)
+    (function setDefaultDate(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const today = `${yyyy}-${mm}-${dd}`;
+      const dateInput = document.getElementById('dateInput');
+      if (dateInput && !dateInput.value) dateInput.value = today;
+    })();
+
+    // Load intervention types
+    function loadTypes() {
+      const select = document.getElementById('typeSelect');
       if (isFileOrigin) {
-        select.innerHTML = '<option value="">לא ניתן לטעון נושאים מ־file:// ‐ פתח דרך http/https</option>';
+        select.innerHTML = '<option value="">לא ניתן לטעון מ־file:// - פתח דרך http/https</option>';
         submitBtn.disabled = true;
         return;
       }
-
       fetch(SCRIPT_URL)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.error) {
-            console.error('Server error:', data.error);
-            select.innerHTML = '<option value="">שגיאה בטעינת נושאים מהשרת</option>';
-            return;
-          }
-          select.innerHTML = '<option value="">בחר נושא...</option>';
-          data.forEach(topic => {
-            const option = document.createElement('option');
-            option.value = topic;
-            option.textContent = topic;
-            select.appendChild(option);
+        .then(r => r.json())
+        .then(list => {
+          select.innerHTML = '<option value="">בחר...</option>';
+          (list || []).forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            select.appendChild(opt);
           });
         })
-        .catch(error => {
-          console.error('שגיאה בטעינת נושאים:', error);
-          select.innerHTML = '<option value="">נושאים לא נטענו</option>';
+        .catch(err => {
+          console.error('שגיאה בטעינת סוגי התערבות:', err);
+          select.innerHTML = '<option value="">שגיאה בטעינה</option>';
         });
     }
-    loadTopics();
+    loadTypes();
 
-    // שליחת הטופס
+    // Submit handler
     formEl.addEventListener('submit', function(e) {
       e.preventDefault();
-      const form = this;
-      const formData = new FormData(form);
       const responseEl = document.getElementById('responseMessage');
-      const inputs = form.querySelectorAll('input, select, textarea, button');
+      const inputs = formEl.querySelectorAll('input, select, textarea, button');
 
       if (isFileOrigin) {
         responseEl.innerText = '❌ אי אפשר לשלוח מתוך file://. פתח דרך http/https לפי ההוראות למעלה.';
@@ -201,44 +191,46 @@
         return;
       }
 
+      const formData = new FormData(formEl);
       inputs.forEach(el => el.disabled = true);
       responseEl.style.display = 'none';
       responseEl.className = '';
 
       fetch(SCRIPT_URL, { method: 'POST', body: formData })
-        .then(response => response.text())
-        .then(result => {
-          const txt = (result || '').trim().toUpperCase();
-          if (txt === 'OK') {
-            responseEl.innerText = '✅ הטופס נשלח בהצלחה! לצפייה בטבלה לחץ כאן: https://gil1feldman.github.io/BDS_Tracker/';
+        .then(r => r.text())
+        .then(txt => {
+          const t = (txt || '').trim().toUpperCase();
+          if (t === 'OK') {
+            responseEl.innerText = '✅ נשמר בהצלחה.';
             responseEl.className = 'success';
             responseEl.style.display = 'block';
-            form.reset();
+            formEl.reset();
+            // Restore default date after reset
+            document.getElementById('dateInput').value = (new Date()).toISOString().slice(0,10);
             responseEl.scrollIntoView({ behavior: 'smooth' });
-          } else if (txt.startsWith('MISSING')) {
-            responseEl.innerText = '❌ שדות חובה חסרים. אנא מלא את כל השדות המסומנים.';
+          } else if (t.includes('MISSING') || t.includes('INVALID')) {
+            responseEl.innerText = '❌ שדות חובה חסרים או ערכים שגויים. בדוק והגש שוב.';
             responseEl.className = 'error';
             responseEl.style.display = 'block';
           } else {
-            responseEl.innerText = '❌ אירעה שגיאה בשליחה. ראה קונסול לדיווח השרת.';
+            responseEl.innerText = '❌ אירעה שגיאה בשליחה. ראה קונסול לפרטים.';
             responseEl.className = 'error';
             responseEl.style.display = 'block';
-            console.error('server response:', result);
+            console.error('server response:', txt);
           }
         })
-        .catch(error => {
+        .catch(err => {
           responseEl.innerText = '❌ אירעה שגיאה בשליחה. בדוק חיבור/הרשאות/פריסה.';
           responseEl.className = 'error';
           responseEl.style.display = 'block';
-          responseEl.scrollIntoView({ behavior: 'smooth' });
-          console.error(error);
+          console.error(err);
         })
         .finally(() => {
-          setTimeout(() => { inputs.forEach(el => el.disabled = false); }, 1500);
+          setTimeout(() => { inputs.forEach(el => el.disabled = false); }, 1200);
         });
     });
 
-    // סגירת המודאל בלחיצה מחוץ
+    // Close modal when clicking outside
     window.onclick = function(event) {
       const modal = document.getElementById('infoModal');
       if (event.target === modal) modal.style.display = "none";
