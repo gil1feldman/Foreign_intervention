@@ -1,262 +1,139 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>תיעוד התערבויות/תקיפות</title>
-  <style>
-    body { font-family: Arial, sans-serif; direction: rtl; background:#f9f9f9; margin:0; }
-    .banner { background:#003366; color:#fff; padding:12px 20px; text-align:center; border-radius:0 0 12px 12px; position:relative; }
-    .banner h1 { font-size:20px; margin:6px 0 0 0; }
-    .info-button { position:absolute; top:10px; left:10px; width:26px; height:26px; background:#00aaff; color:#fff; font-size:18px; font-weight:bold; border-radius:6px; text-align:center; line-height:26px; cursor:pointer; }
-    .table-button { position:absolute; top:10px; right:10px; background:#e0ecf8; color:#1a3969; padding:4px 8px; font-size:16px; border-radius:6px; text-decoration:none; border:1px solid #b6d0ea; }
-    .table-button:hover { background:#d2e4f5; }
-    .modal { display:none; position:fixed; z-index:1000; right:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
-    .modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:12px; width:90%; max-width:520px; direction:rtl; font-size:16px; line-height:1.6; }
-    .close { float:left; font-size:24px; font-weight:bold; color:#888; cursor:pointer; }
-    .container { padding:20px; width:90%; max-width:760px; margin:auto; }
-    form { background:#fff; padding:20px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
-    label { display:block; margin-top:14px; font-weight:bold; }
-    input[type="text"], input[type="url"], input[type="date"], select, textarea {
-      width:100%; padding:10px; margin-top:6px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; font-size:16px;
-    }
-    textarea { resize:vertical; min-height:90px; }
-    button { width:100%; margin-top:20px; padding:12px; background:#003366; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:16px; }
-    button:disabled { background:#ccc; cursor:not-allowed; }
-    button:hover:not(:disabled) { background:#002855; }
-    #responseMessage { margin-top:20px; font-weight:bold; text-align:center; padding:12px; border-radius:8px; font-size:16px; display:none; animation:fadeIn .5s ease-in-out; }
-    #responseMessage.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
-    #responseMessage.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
-    .warning { margin:16px 0; padding:12px; border-radius:8px; background:#fff3cd; color:#856404; border:1px solid #ffeeba; display:none; }
-    .hint { font-weight:normal; color:#666; font-size:13px; }
-    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-    @media (max-width:480px){
-      .banner h1{ font-size:16px; }
-      .info-button{ top:8px; left:8px; width:24px; height:24px; font-size:16px; line-height:24px; }
-      .table-button{ top:8px; right:8px; font-size:14px; padding:3px 6px; }
-      input, select, textarea, button{ font-size:14px; }
-    }
-  </style>
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="light">
 </head>
-<body>
-  <div class="banner">
-    <div class="info-button" onclick="document.getElementById('infoModal').style.display='block'">i</div>
-    <a href="#" target="_blank" rel="noopener" class="table-button" title="מעבר לטבלת הנתונים">📊</a>
-    <h1>תיעוד התערבויות/תקיפות</h1>
-  </div>
+<body class="bg-slate-50 text-slate-900">
+  <!-- Banner -->
+  <header class="relative bg-slate-900 text-white px-4 py-3 rounded-b-2xl">
+    <button type="button" id="openInfo" class="absolute left-3 top-2.5 w-8 h-8 rounded-md bg-sky-500 hover:bg-sky-600 transition text-white text-lg font-bold">i</button>
+    <a href="#" target="_blank" rel="noopener" class="absolute right-3 top-2.5 text-slate-900 bg-sky-50 border border-sky-200 hover:bg-sky-100 transition rounded-md px-2 py-1 text-sm">📊 טבלה</a>
+    <h1 class="text-center text-xl md:text-2xl font-semibold">תיעוד התערבויות/תקיפות</h1>
+  </header>
 
-  <div id="infoModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="document.getElementById('infoModal').style.display='none'">✖</span>
-      <h3>ℹ️ איך ממלאים?</h3>
-      <p>1. מלא תאריך, קישור ותיאור קצר.</p>
-      <p>2. בחר סוג התערבות מהרשימה.</p>
-      <p>3. השלם את שאר השדות ושמור.</p>
-    </div>
-  </div>
-
-  <div class="container">
-    <div id="corsWarning" class="warning"></div>
-
-    <form id="form" novalidate>
-      <label>תאריך:
-        <input type="date" name="date" id="dateInput" required>
-        <span class="hint">לא ניתן לבחור תאריך עתידי.</span>
-      </label>
-
-      <label>קישור:
-        <input type="url" name="link" id="linkInput" required placeholder="https://example.com" pattern="https?://.+">
-        <span class="hint">חובה http או https.</span>
-      </label>
-
-      <label>תיאור קצר:
-        <textarea name="summary" id="summaryInput" required placeholder="תיאור תמציתי של האירוע" minlength="5" maxlength="500"></textarea>
-      </label>
-
-      <label>סוג התערבות:
-        <select name="type" id="typeSelect" required>
-          <option value="">טוען...</option>
-        </select>
-      </label>
-
-      <label>הגוף התוקף:
-        <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון">
-      </label>
-
-      <label>הגוף המותקף:
-        <input type="text" name="target" placeholder="ארגון/גוף/יעד">
-      </label>
-
-      <label>שימוש ב-AI:
-        <select name="ai" required>
-          <option value="כן">כן</option>
-          <option value="לא" selected>לא</option>
-        </select>
-      </label>
-
-      <label>מידת השפעה:
-        <select name="impact" required>
-          <option value="נמוך">נמוך</option>
-          <option value="בינוני" selected>בינוני</option>
-          <option value="גבוה">גבוה</option>
-        </select>
-      </label>
-
-      <label>האם קשור לבחירות:
-        <select name="elections" required>
-          <option value="כן">כן</option>
-          <option value="לא" selected>לא</option>
-        </select>
-      </label>
-
-      <label>האם קשור לישראל/יהודים:
-        <select name="israel" required>
-          <option value="כן">כן</option>
-          <option value="לא" selected>לא</option>
-        </select>
-      </label>
-
-      <button type="submit" id="submitBtn">שליחה</button>
-      <p id="responseMessage"></p>
+  <!-- Info Modal -->
+  <dialog id="infoModal" class="backdrop:bg-black/50 rounded-xl p-0 w-[92%] max-w-lg">
+    <form method="dialog" class="p-4">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-lg font-semibold">ℹ️ איך ממלאים?</h3>
+        <button class="text-slate-500 hover:text-slate-700 text-xl leading-none">✖</button>
+      </div>
+      <ol class="list-decimal pr-5 space-y-1 text-[15px] leading-6">
+        <li>מלא תאריך, קישור ותיאור קצר.</li>
+        <li>בחר פרק, תחומים ופלטפורמות.</li>
+        <li>השלם כותרות/תרגום ושדות תוקף/יעד, בחר מידת השפעה וסמני כן/לא.</li>
+        <li>שלח. חותמת הזמן מתווספת אוטומטית.</li>
+      </ol>
     </form>
-  </div>
+  </dialog>
 
-  <script>
-    // ====== CONFIG ======
-    // GET - לטעינת רשימת סוגי ההתערבות (googleusercontent)
-    const SCRIPT_URL_GET  = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhJkyTwd2IcOdt9lqHu8EqMvFHGzNmZNSYCRfNGgfTqCnyuqc-O0L2xchWLqJRsFDhUOg0e3bXBkfbfc2kW2JC1a0dgTBuvkKHP6kcXNYWXOcOay3Oce5Lfq5W9OpunBFOs1ogbbbLa9F4zC5FwVpdP6IMi8PZJTgLzfYhu8Ume8cPHe6AfDfbGEOeimUSgcyX1Wa2e-jYf2sSLLPadYWMcr1TGzlqjL39Iol76KS2YVHIGGlOpKKit0nzeUshJGUSCBeWW0beXmjRxyyq2rQ_c1SqlBw&lib=M2IuC9PqbOC1fAVcuVIX3CTZqqPiN-w-P';
-    // POST - לשליחת הטופס (script.google.com)
-    const SCRIPT_URL_POST = 'https://script.google.com/macros/s/AKfycbyoYh09DzjX3mjAuM2g3juHg9ChP7EOfJ9f7dfTecjs0_rlCuejtvJaMpQkUMn8c6Bf/exec';
+  <!-- Main -->
+  <main class="max-w-3xl mx-auto p-4 md:p-6">
+    <!-- CORS warning -->
+    <div id="corsWarning" class="hidden my-4 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 px-4 py-3 text-sm"></div>
 
-    // Detect file://
-    const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
-    const corsWarning = document.getElementById('corsWarning');
-    const formEl = document.getElementById('form');
-    const submitBtn = document.getElementById('submitBtn');
+    <!-- Form Card -->
+    <form id="form" novalidate class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 md:p-6 space-y-4">
+      <!-- Hidden: Timestamp -->
+      <input type="hidden" name="timestamp" id="timestampInput" />
 
-    if (isFileOrigin) {
-      corsWarning.style.display = 'block';
-      corsWarning.innerHTML =
-        '⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות. פתח דרך שרת (localhost/Pages).';
-    }
+      <!-- Row: Date + Link -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="font-semibold">תאריך</span>
+          <input type="date" name="date" id="dateInput" required
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+          <span class="block text-xs text-slate-500 mt-1">לא ניתן לבחור תאריך עתידי.</span>
+        </label>
 
-    // Default date = today
-    (function setDefaultDate(){
-      const d = new Date(), yyyy = d.getFullYear(), mm = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
-      const today = `${yyyy}-${mm}-${dd}`;
-      const dateInput = document.getElementById('dateInput');
-      if (dateInput) { dateInput.max = today; if (!dateInput.value) dateInput.value = today; }
-    })();
+        <label class="block">
+          <span class="font-semibold">קישור</span>
+          <input type="url" name="link" id="linkInput" required placeholder="https://example.com" pattern="https?://.+"
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+          <span class="block text-xs text-slate-500 mt-1">חובה http או https.</span>
+        </label>
+      </div>
 
-    function showError(msg) {
-      const responseEl = document.getElementById('responseMessage');
-      responseEl.innerText = '❌ ' + msg;
-      responseEl.className = 'error';
-      responseEl.style.display = 'block';
-      responseEl.scrollIntoView({ behavior: 'smooth' });
-    }
+      <!-- Titles -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="font-semibold">כותרת</span>
+          <input type="text" name="title" id="titleInput" placeholder="כותרת המקור (רצוי)"
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        </label>
+        <label class="block">
+          <span class="font-semibold">כותרת בעברית</span>
+          <input type="text" name="title_he" id="titleHeInput" placeholder="תרגום/ניסוח בעברית (לא חובה)"
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        </label>
+      </div>
 
-    // Load intervention types (GET)
-    function loadTypes() {
-      const select = document.getElementById('typeSelect');
-      if (isFileOrigin) {
-        select.innerHTML = '<option value="">לא ניתן לטעון מ־file://</option>';
-        submitBtn.disabled = true;
-        return;
-      }
-      fetch(SCRIPT_URL_GET)
-        .then(async r => {
-          const text = await r.text();
-          let payload;
-          try { payload = JSON.parse(text); }
-          catch { throw new Error('שרת החזיר תגובה לא תקינה (לא JSON).'); }
-          if (!Array.isArray(payload)) {
-            const note = payload && payload.error ? 'שגיאת שרת: ' + payload.error : 'מבנה נתונים לא צפוי';
-            select.innerHTML = '<option value="">שגיאה בטעינה</option>';
-            showError(note);
-            return;
-          }
-          select.innerHTML = '<option value="">בחר...</option>';
-          payload.forEach(v => {
-            const opt = document.createElement('option');
-            opt.value = v; opt.textContent = v;
-            select.appendChild(opt);
-          });
-        })
-        .catch(err => {
-          console.error('שגיאה בטעינת סוגי התערבות:', err);
-          select.innerHTML = '<option value="">שגיאה בטעינה</option>';
-          showError('שגיאה בטעינת סוגי התערבות. בדוק את ה־URL/פריסה.');
-        });
-    }
-    loadTypes();
+      <!-- Summary + Hebrew translation -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="font-semibold">תיאור קצר</span>
+          <textarea name="summary" id="summaryInput" required minlength="5" maxlength="500"
+                    placeholder="תיאור תמציתי של האירוע" class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500 min-h-[96px]"></textarea>
+        </label>
+        <label class="block">
+          <span class="font-semibold">תרגום לעברית</span>
+          <textarea name="translation_he" id="translationHeInput" placeholder="תרגום חופשי/נקודות בעברית (לא חובה)"
+                    class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500 min-h-[96px]"></textarea>
+        </label>
+      </div>
 
-    function validateForm() {
-      const responseEl = document.getElementById('responseMessage');
-      responseEl.style.display = 'none'; responseEl.className = '';
+      <!-- Attacker / Target -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="font-semibold">הגוף התוקף</span>
+          <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון"
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        </label>
+        <label class="block">
+          <span class="font-semibold">הגוף המותקף</span>
+          <input type="text" name="target" placeholder="ארגון/גוף/יעד"
+                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        </label>
+      </div>
 
-      const dateVal = document.getElementById('dateInput').value;
-      const linkVal = document.getElementById('linkInput').value.trim();
-      const summaryVal = document.getElementById('summaryInput').value.trim();
-      const typeVal = document.getElementById('typeSelect').value;
+      <!-- Chapter (single select) -->
+      <fieldset class="space-y-2">
+        <legend class="font-semibold">פרק</legend>
+        <select name="chapter" id="chapterSelect" required
+                class="w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
+          <option value="" selected disabled>בחר...</option>
+          <option>דוחות מחקר</option>
+          <option>מקומית</option>
+          <option>עולמית</option>
+          <option>מדיניות ורגולציה</option>
+          <option>יוזמות אזרחיות</option>
+          <option>אחר</option>
+        </select>
+      </fieldset>
 
-      const today = new Date(); today.setHours(0,0,0,0);
-      const picked = new Date(dateVal); picked.setHours(0,0,0,0);
-      if (picked > today) { showError('תאריך עתידי אינו מותר.'); return false; }
-      if (!/^https?:\/\/.+/i.test(linkVal)) { showError('הקישור חייב להתחיל ב־http או https.'); return false; }
-      if (!summaryVal || summaryVal.length < 5) { showError('תיאור קצר קצר מדי.'); return false; }
-      if (!typeVal) { showError('בחר סוג התערבות מהרשימה.'); return false; }
-      return true;
-    }
+      <!-- Domains (multi) -->
+      <fieldset class="space-y-2">
+        <legend class="font-semibold">תחום <span class="text-xs text-slate-500">(בחירה מרובה)</span></legend>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4">
+          <!-- name="domains[]" so the שרת יקבל מערך -->
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="כלכלי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">כלכלי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="צבאי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">צבאי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="חברתי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">חברתי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="מדיני" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">מדיני</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="דתי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">דתי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="פוליטי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">פוליטי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="בינלאומי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">בינלאומי</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="בחירות" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">בחירות</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="אחר" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">אחר</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="לא רלוונטי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">לא רלוונטי</label>
+        </div>
+      </fieldset>
 
-    // Submit with no-cors + x-www-form-urlencoded
-    formEl.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const responseEl = document.getElementById('responseMessage');
-      const inputs = formEl.querySelectorAll('input, select, textarea, button');
-
-      if (isFileOrigin) {
-        responseEl.innerText = '❌ אי אפשר לשלוח מתוך file://. פתח דרך http/https.';
-        responseEl.className = 'error'; responseEl.style.display = 'block'; return;
-      }
-      if (!validateForm()) return;
-
-      // Serialize to application/x-www-form-urlencoded
-      const fd = new FormData(formEl);
-      const payload = new URLSearchParams();
-      for (const [k,v] of fd.entries()) payload.append(k, v);
-
-      inputs.forEach(el => el.disabled = true);
-      responseEl.style.display = 'none'; responseEl.className = '';
-
-      fetch(SCRIPT_URL_POST, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: payload.toString()
-      })
-      .then(() => {
-        // אין גוף תגובה ב-no-cors — הודעת הצלחה אופטימית
-        responseEl.innerText = '✅ נשלח. אפשר לוודא שנוספה שורה בגיליון.';
-        responseEl.className = 'success';
-        responseEl.style.display = 'block';
-        formEl.reset();
-        const d = new Date(); document.getElementById('dateInput').value = d.toISOString().slice(0,10);
-        responseEl.scrollIntoView({ behavior: 'smooth' });
-      })
-      .catch(err => {
-        responseEl.innerText = '❌ אירעה שגיאה בשליחה. בדוק חיבור/הרשאות/פריסה.';
-        responseEl.className = 'error'; responseEl.style.display = 'block';
-        console.error(err);
-      })
-      .finally(() => setTimeout(() => { inputs.forEach(el => el.disabled = false); }, 1200));
-    });
-
-    // Close modal on outside click
-    window.onclick = function(event) {
-      const modal = document.getElementById('infoModal');
-      if (event.target === modal) modal.style.display = 'none';
-    };
-  </script>
-</body>
-</html>
+      <!-- Platforms (multi) -->
+      <fieldset class="space-y-2">
+        <legend class="font-semibold">פלטפורמות <span class="text-xs text-sl
