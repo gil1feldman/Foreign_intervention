@@ -4,256 +4,244 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>תיעוד התערבויות/תקיפות</title>
-  <!-- Tailwind CSS (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <meta name="color-scheme" content="light">
+  <style>
+    :root{
+      --bg:#f7f8fa; --card:#ffffff; --ink:#1f2a37; --muted:#6b7280;
+      --prime:#0b3a6f; --prime-2:#0a2f59; --ring:#e5e7eb; --ok:#155724; --okbg:#d4edda;
+      --err:#7f1d1d; --errbg:#fde2e2; --warn:#8a6d3b; --warnbg:#fff3cd;
+      --chip:#eef2f7;
+    }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
+    .banner{background:var(--prime);color:#fff;padding:14px 16px;border-radius:0 0 14px 14px;position:sticky;top:0;z-index:10;box-shadow:0 4px 10px rgba(0,0,0,.06)}
+    .banner h1{margin:0;text-align:center;font-size:20px}
+    .btn-icon{position:absolute;top:10px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+    .btn-icon:hover{background:rgba(255,255,255,.16)}
+    .btn-left{left:10px} .btn-right{right:10px}
+    .container{max-width:820px;margin:22px auto;padding:0 14px}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);padding:18px}
+    label>span, legend{font-weight:600}
+    input[type="text"],input[type="url"],input[type="date"],select,textarea{
+      width:100%;margin-top:6px;padding:10px 12px;border:1px solid #cfd6df;border-radius:8px;font-size:15px;background:#fff;box-sizing:border-box
+    }
+    textarea{min-height:92px;resize:vertical}
+    .hint{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:720px){.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:1fr 1fr 1fr}}
+    fieldset{border:1px solid var(--ring);border-radius:10px;padding:12px 12px 8px;margin:0}
+    legend{padding:0 6px;font-size:14px;color:var(--prime-2)}
+    .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    @media(min-width:720px){.checks{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .check{display:flex;align-items:center;gap:8px;background:var(--chip);border:1px solid #e8edf3;padding:6px 8px;border-radius:8px}
+    .toolbar{display:flex;gap:8px;margin:6px 0 8px}
+    .chipbtn{border:1px solid #cfd6df;background:#f9fbff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer}
+    .chipbtn:hover{background:#eef5ff}
+    button[type="submit"]{width:100%;padding:12px;border:0;border-radius:10px;background:var(--prime);color:#fff;font-weight:600;cursor:pointer}
+    button[type="submit"]:hover{background:var(--prime-2)}
+    #responseMessage{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;text-align:center;font-weight:600}
+    #responseMessage.success{background:var(--okbg);color:var(--ok);border:1px solid #c3e6cb}
+    #responseMessage.error{background:var(--errbg);color:var(--err);border:1px solid #f5c6cb}
+    .warning{display:none;margin:12px 0;padding:10px 12px;border-radius:10px;background:var(--warnbg);color:var(--warn);border:1px solid #ffeeba}
+    dialog{border:0;border-radius:12px;max-width:520px;width:92%}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .close{background:#f2f2f2;border:1px solid #ddd;border-radius:8px;padding:2px 8px;cursor:pointer}
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
-  <!-- Banner -->
-  <header class="relative bg-slate-900 text-white px-4 py-3 rounded-b-2xl">
-    <button type="button" id="openInfo" class="absolute left-3 top-2.5 w-8 h-8 rounded-md bg-sky-500 hover:bg-sky-600 transition text-white text-lg font-bold">i</button>
-    <a href="#" target="_blank" rel="noopener" class="absolute right-3 top-2.5 text-slate-900 bg-sky-50 border border-sky-200 hover:bg-sky-100 transition rounded-md px-2 py-1 text-sm">📊 טבלה</a>
-    <h1 class="text-center text-xl md:text-2xl font-semibold">תיעוד התערבויות/תקיפות</h1>
-  </header>
+<body>
+  <div class="banner">
+    <button class="btn-icon btn-left" id="openInfo" title="מידע">i</button>
+    <a href="#" class="btn-icon btn-right" title="מעבר לטבלת הנתונים" target="_blank" rel="noopener">📊</a>
+    <h1>תיעוד התערבויות/תקיפות</h1>
+  </div>
 
-  <!-- Info Modal -->
-  <dialog id="infoModal" class="backdrop:bg-black/50 rounded-xl p-0 w-[92%] max-w-lg">
-    <form method="dialog" class="p-4">
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">ℹ️ איך ממלאים?</h3>
-        <button class="text-slate-500 hover:text-slate-700 text-xl leading-none">✖</button>
-      </div>
-      <ol class="list-decimal pr-5 space-y-1 text-[15px] leading-6">
-        <li>מלא תאריך, קישור ותיאור קצר.</li>
-        <li>בחר פרק, תחומים ופלטפורמות.</li>
-        <li>השלם כותרות/תרגום ושדות תוקף/יעד, בחר מידת השפעה וסמני כן/לא.</li>
-        <li>שלח. חותמת הזמן מתווספת אוטומטית.</li>
-      </ol>
-    </form>
+  <dialog id="infoModal">
+    <div class="modal-head">
+      <h3>ℹ️ איך ממלאים?</h3>
+      <button class="close" onclick="infoModal.close()">✖</button>
+    </div>
+    <ol>
+      <li>תאריך, קישור, תיאור קצר.</li>
+      <li>פרק, תחומים, פלטפורמות.</li>
+      <li>כותרות/תרגום, תוקף/יעד, מידת השפעה, סימוני כן/לא.</li>
+      <li>שליחה. חותמת זמן תתווסף אוטומטית.</li>
+    </ol>
   </dialog>
 
-  <!-- Main -->
-  <main class="max-w-3xl mx-auto p-4 md:p-6">
-    <!-- CORS warning -->
-    <div id="corsWarning" class="hidden my-4 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 px-4 py-3 text-sm"></div>
+  <div class="container">
+    <div id="corsWarning" class="warning"></div>
 
-    <!-- Form Card -->
-    <form id="form" novalidate class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 md:p-6 space-y-4">
-      <!-- Hidden: Timestamp -->
-      <input type="hidden" name="timestamp" id="timestampInput" />
+    <form id="form" class="card" novalidate>
+      <input type="hidden" name="timestamp" id="timestampInput"/>
 
-      <!-- Row: Date + Link -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <label class="block">
-          <span class="font-semibold">תאריך</span>
-          <input type="date" name="date" id="dateInput" required
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
-          <span class="block text-xs text-slate-500 mt-1">לא ניתן לבחור תאריך עתידי.</span>
+      <div class="grid cols-2">
+        <label>
+          <span>תאריך</span>
+          <input type="date" name="date" id="dateInput" required>
+          <small class="hint">לא ניתן לבחור תאריך עתידי.</small>
         </label>
-
-        <label class="block">
-          <span class="font-semibold">קישור</span>
-          <input type="url" name="link" id="linkInput" required placeholder="https://example.com" pattern="https?://.+"
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
-          <span class="block text-xs text-slate-500 mt-1">חובה http או https.</span>
+        <label>
+          <span>קישור</span>
+          <input type="url" name="link" id="linkInput" required placeholder="https://example.com" pattern="https?://.+">
+          <small class="hint">חובה http או https.</small>
         </label>
       </div>
 
-      <!-- Titles -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <label class="block">
-          <span class="font-semibold">כותרת</span>
-          <input type="text" name="title" id="titleInput" placeholder="כותרת המקור (רצוי)"
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+      <div class="grid cols-2">
+        <label>
+          <span>כותרת</span>
+          <input type="text" name="title" id="titleInput" placeholder="כותרת המקור (רצוי)">
         </label>
-        <label class="block">
-          <span class="font-semibold">כותרת בעברית</span>
-          <input type="text" name="title_he" id="titleHeInput" placeholder="תרגום/ניסוח בעברית (לא חובה)"
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        <label>
+          <span>כותרת בעברית</span>
+          <input type="text" name="title_he" id="titleHeInput" placeholder="תרגום/ניסוח בעברית (לא חובה)">
         </label>
       </div>
 
-      <!-- Summary + Hebrew translation -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <label class="block">
-          <span class="font-semibold">תיאור קצר</span>
-          <textarea name="summary" id="summaryInput" required minlength="5" maxlength="500"
-                    placeholder="תיאור תמציתי של האירוע" class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500 min-h-[96px]"></textarea>
+      <div class="grid cols-2">
+        <label>
+          <span>תיאור קצר</span>
+          <textarea name="summary" id="summaryInput" required minlength="5" maxlength="500" placeholder="תיאור תמציתי של האירוע"></textarea>
         </label>
-        <label class="block">
-          <span class="font-semibold">תרגום לעברית</span>
-          <textarea name="translation_he" id="translationHeInput" placeholder="תרגום חופשי/נקודות בעברית (לא חובה)"
-                    class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500 min-h-[96px]"></textarea>
+        <label>
+          <span>תרגום לעברית</span>
+          <textarea name="translation_he" id="translationHeInput" placeholder="תרגום חופשי/נקודות בעברית (לא חובה)"></textarea>
         </label>
       </div>
 
-      <!-- Attacker / Target -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <label class="block">
-          <span class="font-semibold">הגוף התוקף</span>
-          <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון"
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+      <div class="grid cols-2">
+        <label>
+          <span>הגוף התוקף</span>
+          <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון">
         </label>
-        <label class="block">
-          <span class="font-semibold">הגוף המותקף</span>
-          <input type="text" name="target" placeholder="ארגון/גוף/יעד"
-                 class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500"/>
+        <label>
+          <span>הגוף המותקף</span>
+          <input type="text" name="target" placeholder="ארגון/גוף/יעד">
         </label>
       </div>
 
-      <!-- Chapter (single select) -->
-      <fieldset class="space-y-2">
-        <legend class="font-semibold">פרק</legend>
-        <select name="chapter" id="chapterSelect" required
-                class="w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
+      <fieldset>
+        <legend>פרק</legend>
+        <select name="chapter" id="chapterSelect" required>
           <option value="" selected disabled>בחר...</option>
-          <option>דוחות מחקר</option>
-          <option>מקומית</option>
-          <option>עולמית</option>
-          <option>מדיניות ורגולציה</option>
-          <option>יוזמות אזרחיות</option>
-          <option>אחר</option>
+          <option>דוחות מחקר</option><option>מקומית</option><option>עולמית</option>
+          <option>מדיניות ורגולציה</option><option>יוזמות אזרחיות</option><option>אחר</option>
         </select>
       </fieldset>
 
-      <!-- Domains (multi) -->
-      <fieldset class="space-y-2">
-        <legend class="font-semibold">תחום <span class="text-xs text-slate-500">(בחירה מרובה)</span></legend>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4">
-          <!-- name="domains[]" so the שרת יקבל מערך -->
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="כלכלי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">כלכלי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="צבאי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">צבאי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="חברתי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">חברתי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="מדיני" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">מדיני</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="דתי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">דתי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="פוליטי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">פוליטי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="בינלאומי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">בינלאומי</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="בחירות" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">בחירות</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="אחר" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">אחר</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="domains[]" value="לא רלוונטי" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">לא רלוונטי</label>
+      <fieldset>
+        <legend>תחום <span class="hint">בחירה מרובה</span></legend>
+        <div class="toolbar">
+          <button class="chipbtn" type="button" data-scope="domains" data-action="all">בחר הכל</button>
+          <button class="chipbtn" type="button" data-scope="domains" data-action="none">נקה הכל</button>
+        </div>
+        <div class="checks" id="domainsBox">
+          <label class="check"><input type="checkbox" name="domains[]" value="כלכלי">כלכלי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="צבאי">צבאי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="חברתי">חברתי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="מדיני">מדיני</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="דתי">דתי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="פוליטי">פוליטי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="בינלאומי">בינלאומי</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="בחירות">בחירות</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="אחר">אחר</label>
+          <label class="check"><input type="checkbox" name="domains[]" value="לא רלוונטי">לא רלוונטי</label>
         </div>
       </fieldset>
 
-      <!-- Platforms (multi) -->
-      <fieldset class="space-y-2">
-        <legend class="font-semibold">פלטפורמות <span class="text-xs text-slate-500">(בחירה מרובה)</span></legend>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4">
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="פייסבוק" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">פייסבוק</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="יוטיוב" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">יוטיוב</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="אינסטגרם" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">אינסטגרם</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="טיקטוק" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">טיקטוק</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="טוויטר" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">טוויטר</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="טלגרם" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">טלגרם</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="אתרים - Web" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">אתרים ‐ Web</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="ווטסאפ" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">ווטסאפ</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="צ'אט בוטים" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">צ'אט בוטים</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="gaming" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">gaming</label>
-          <label class="inline-flex items-center gap-2"><input type="checkbox" name="platforms[]" value="אחר" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">אחר</label>
+      <fieldset>
+        <legend>פלטפורמות <span class="hint">בחירה מרובה</span></legend>
+        <div class="toolbar">
+          <button class="chipbtn" type="button" data-scope="platforms" data-action="all">בחר הכל</button>
+          <button class="chipbtn" type="button" data-scope="platforms" data-action="none">נקה הכל</button>
+        </div>
+        <div class="checks" id="platformsBox">
+          <label class="check"><input type="checkbox" name="platforms[]" value="פייסבוק">פייסבוק</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="יוטיוב">יוטיוב</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="אינסטגרם">אינסטגרם</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="טיקטוק">טיקטוק</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="טוויטר">טוויטר</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="טלגרם">טלגרם</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="אתרים - Web">אתרים ‐ Web</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="ווטסאפ">ווטסאפ</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="צ'אט בוטים">צ'אט בוטים</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="gaming">gaming</label>
+          <label class="check"><input type="checkbox" name="platforms[]" value="אחר">אחר</label>
         </div>
       </fieldset>
 
-      <!-- Impact -->
-      <label class="block">
-        <span class="font-semibold">מידת השפעה</span>
-        <select name="impact" id="impactSelect" required
-                class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
-          <option value="נמוך">נמוך</option>
-          <option value="בינוני" selected>בינוני</option>
-          <option value="גבוה">גבוה</option>
-          <option value="קריטי">קריטי</option>
-          <option value="לא רלוונטי">לא רלוונטי</option>
+      <div class="grid cols-3">
+        <label>
+          <span>מידת השפעה</span>
+          <select name="impact" id="impactSelect" required>
+            <option value="נמוך">נמוך</option>
+            <option value="בינוני" selected>בינוני</option>
+            <option value="גבוה">גבוה</option>
+            <option value="קריטי">קריטי</option>
+            <option value="לא רלוונטי">לא רלוונטי</option>
+          </select>
+        </label>
+        <label>
+          <span>שימוש ב-AI</span>
+          <select name="ai" id="aiSelect" required>
+            <option value="כן">כן</option><option value="לא" selected>לא</option>
+          </select>
+        </label>
+        <label>
+          <span>קשור ל-בחירות</span>
+          <select name="elections" id="electionsSelect" required>
+            <option value="כן">כן</option><option value="לא" selected>לא</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        <span>קשור לישראל/יהודים</span>
+        <select name="israel" id="israelSelect" required>
+          <option value="כן">כן</option><option value="לא" selected>לא</option>
         </select>
       </label>
 
-      <!-- Yes/No group -->
-      <div class="grid md:grid-cols-3 gap-4">
-        <label class="block">
-          <span class="font-semibold">שימוש ב-AI</span>
-          <select name="ai" id="aiSelect" required
-                  class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
-            <option value="כן">כן</option>
-            <option value="לא" selected>לא</option>
-          </select>
-        </label>
-
-        <label class="block">
-          <span class="font-semibold">קשור לבחירות</span>
-          <select name="elections" id="electionsSelect" required
-                  class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
-            <option value="כן">כן</option>
-            <option value="לא" selected>לא</option>
-          </select>
-        </label>
-
-        <label class="block">
-          <span class="font-semibold">קשור לישראל/יהודים</span>
-          <select name="israel" id="israelSelect" required
-                  class="mt-1 w-full rounded-md border-slate-300 focus:border-sky-500 focus:ring-sky-500">
-            <option value="כן">כן</option>
-            <option value="לא" selected>לא</option>
-          </select>
-        </label>
-      </div>
-
-      <!-- Submit + Response -->
-      <button type="submit" id="submitBtn"
-              class="w-full mt-2 bg-slate-900 hover:bg-slate-800 text-white rounded-md py-3 font-semibold transition">
-        שליחה
-      </button>
-      <p id="responseMessage" class="hidden text-center text-sm rounded-md px-3 py-2"></p>
+      <button type="submit" id="submitBtn">שליחה</button>
+      <p id="responseMessage"></p>
     </form>
-  </main>
+  </div>
 
   <script>
     // ====== CONFIG ======
-    // POST - לשליחת הטופס (script.google.com)
     const SCRIPT_URL_POST = 'https://script.google.com/macros/s/AKfycbyoYh09DzjX3mjAuM2g3juHg9ChP7EOfJ9f7dfTecjs0_rlCuejtvJaMpQkUMn8c6Bf/exec';
 
-    // Detect file://
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
     const corsWarning = document.getElementById('corsWarning');
     const formEl = document.getElementById('form');
-    const submitBtn = document.getElementById('submitBtn');
     const responseEl = document.getElementById('responseMessage');
 
-    // Modal handlers
+    // modal
     const infoModal = document.getElementById('infoModal');
-    document.getElementById('openInfo').addEventListener('click', () => infoModal.showModal());
-    infoModal.addEventListener('click', (e) => {
-      const rect = infoModal.getBoundingClientRect();
-      const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
-      if (!inside) infoModal.close();
-    });
+    document.getElementById('openInfo').addEventListener('click', ()=> infoModal.showModal());
 
-    if (isFileOrigin) {
-      corsWarning.classList.remove('hidden');
-      corsWarning.innerHTML = '⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות. פתח דרך שרת (localhost/Pages).';
+    // file:// warning
+    if (isFileOrigin){
+      corsWarning.style.display='block';
+      corsWarning.innerHTML='⚠️ הקובץ פתוח מ־<code>file://</code> ולכן הדפדפן חוסם בקשות. פתח דרך שרת (localhost/Pages).';
     }
 
-    // Default date = today (and max)
-    (function setDefaultDate(){
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      const today = `${yyyy}-${mm}-${dd}`;
-      const dateInput = document.getElementById('dateInput');
-      if (dateInput) { dateInput.max = today; if (!dateInput.value) dateInput.value = today; }
+    // date default + max
+    (function(){
+      const d=new Date(), yyyy=d.getFullYear(), mm=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+      const today=`${yyyy}-${mm}-${dd}`;
+      const dateInput=document.getElementById('dateInput');
+      if (dateInput){ dateInput.max=today; if(!dateInput.value) dateInput.value=today; }
     })();
 
-    function showMsg(type, text){
+    function showMsg(ok, text){
       responseEl.textContent = text;
-      responseEl.className = 'text-center text-sm rounded-md px-3 py-2 ' +
-        (type === 'success'
-          ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
-          : 'bg-rose-50 text-rose-700 ring-1 ring-rose-200');
-      responseEl.classList.remove('hidden');
-      responseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      responseEl.className = ok ? 'success' : 'error';
+      responseEl.style.display='block';
+      responseEl.scrollIntoView({behavior:'smooth', block:'center'});
     }
 
-    function validateForm() {
-      responseEl.classList.add('hidden');
-
+    function validateForm(){
+      responseEl.style.display='none'; responseEl.className='';
       const dateVal = document.getElementById('dateInput').value;
       const linkVal = document.getElementById('linkInput').value.trim();
       const summaryVal = document.getElementById('summaryInput').value.trim();
@@ -263,82 +251,69 @@
       const electionsVal = document.getElementById('electionsSelect').value;
       const israelVal = document.getElementById('israelSelect').value;
 
-      const today = new Date(); today.setHours(0,0,0,0);
-      const picked = new Date(dateVal); picked.setHours(0,0,0,0);
+      const today=new Date(); today.setHours(0,0,0,0);
+      const picked=new Date(dateVal); picked.setHours(0,0,0,0);
 
-      if (!dateVal) { showMsg('error','יש למלא תאריך.'); return false; }
-      if (picked > today) { showMsg('error','תאריך עתידי אינו מותר.'); return false; }
-      if (!/^https?:\/\/.+/i.test(linkVal)) { showMsg('error','הקישור חייב להתחיל ב־http או https.'); return false; }
-      if (!summaryVal || summaryVal.length < 5) { showMsg('error','תיאור קצר קצר מדי.'); return false; }
-      if (!chapterVal) { showMsg('error','יש לבחור פרק.'); return false; }
-      if (!impactVal || !aiVal || !electionsVal || !israelVal) { showMsg('error','יש להשלים את שדות כן/לא ומידת ההשפעה.'); return false; }
-
+      if(!dateVal){ showMsg(false,'יש למלא תאריך.'); return false; }
+      if(picked>today){ showMsg(false,'תאריך עתידי אינו מותר.'); return false; }
+      if(!/^https?:\/\/.+/i.test(linkVal)){ showMsg(false,'הקישור חייב להתחיל ב-http או https.'); return false; }
+      if(!summaryVal || summaryVal.length<5){ showMsg(false,'תיאור קצר קצר מדי.'); return false; }
+      if(!chapterVal){ showMsg(false,'יש לבחור פרק.'); return false; }
+      if(!impactVal || !aiVal || !electionsVal || !israelVal){ showMsg(false,'יש להשלים את שדות כן/לא ומידת ההשפעה.'); return false; }
       return true;
     }
 
-    // Helper: collect multiple checkbox values into repeated params (domains[]/platforms[])
-    function buildUrlSearchParams(form) {
-      const fd = new FormData(form);
-      const params = new URLSearchParams();
+    // build payload including arrays
+    function buildPayload(form){
+      const fd=new FormData(form);
+      const params=new URLSearchParams();
 
-      // copy all non-checkbox fields
-      for (const [k, v] of fd.entries()) {
-        // we'll handle checkboxes by name later to preserve arrays
-        if (k.endsWith('[]')) continue;
-        params.append(k, v);
+      for(const [k,v] of fd.entries()){
+        if(k.endsWith('[]')) continue;
+        params.append(k,v);
       }
-
-      // domains[]
-      const domainBoxes = form.querySelectorAll('input[name="domains[]"]:checked');
-      domainBoxes.forEach(cb => params.append('domains[]', cb.value));
-
-      // platforms[]
-      const platformBoxes = form.querySelectorAll('input[name="platforms[]"]:checked');
-      platformBoxes.forEach(cb => params.append('platforms[]', cb.value));
-
+      form.querySelectorAll('input[name="domains[]"]:checked').forEach(cb=>params.append('domains[]', cb.value));
+      form.querySelectorAll('input[name="platforms[]"]:checked').forEach(cb=>params.append('platforms[]', cb.value));
       return params;
     }
 
-    // Submit
-    formEl.addEventListener('submit', function(e) {
+    // Select all / none
+    function toggleGroup(scope, action){
+      const sel = scope==='domains' ? 'input[name="domains[]"]' : 'input[name="platforms[]"]';
+      document.querySelectorAll(sel).forEach(cb => cb.checked = (action==='all'));
+    }
+    document.querySelectorAll('.chipbtn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        toggleGroup(btn.dataset.scope, btn.dataset.action);
+      });
+    });
+
+    // submit
+    formEl.addEventListener('submit', (e)=>{
       e.preventDefault();
+      if(isFileOrigin) return showMsg(false,'אי אפשר לשלוח מתוך file://. פתח דרך http/https.');
+      if(!validateForm()) return;
 
-      if (isFileOrigin) {
-        showMsg('error','אי אפשר לשלוח מתוך file://. פתח דרך http/https.');
-        return;
-      }
-      if (!validateForm()) return;
-
-      // set timestamp (local ISO without timezone Z for קריאות)
-      const now = new Date();
-      const pad = n => String(n).padStart(2,'0');
-      const ts = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      // client timestamp (אופציונלי — השרת ממילא מוסיף משלו)
+      const now=new Date(), pad=n=>String(n).padStart(2,'0');
+      const ts=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
       document.getElementById('timestampInput').value = ts;
 
+      const payload = buildPayload(formEl);
       const inputs = formEl.querySelectorAll('input, select, textarea, button');
-      inputs.forEach(el => el.disabled = true);
-      responseEl.classList.add('hidden');
-
-      const payload = buildUrlSearchParams(formEl);
+      inputs.forEach(el=>el.disabled=true);
 
       fetch(SCRIPT_URL_POST, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
         body: payload.toString()
       })
-      .then(() => {
-        showMsg('success','✅ נשלח. אפשר לוודא שנוספה שורה בגיליון.');
-        formEl.reset();
-        // restore today
-        const d = new Date();
-        document.getElementById('dateInput').value = d.toISOString().slice(0,10);
+      .then(()=>{ showMsg(true,'✅ נשלח. וודא שנוספה שורה בגיליון.'); formEl.reset();
+        document.getElementById('dateInput').value = new Date().toISOString().slice(0,10);
       })
-      .catch(err => {
-        console.error(err);
-        showMsg('error','❌ אירעה שגיאה בשליחה. בדוק חיבור/הרשאות/פריסה.');
-      })
-      .finally(() => setTimeout(() => { inputs.forEach(el => el.disabled = false); }, 1000));
+      .catch(err=>{ console.error(err); showMsg(false,'❌ שגיאה בשליחה. בדוק חיבור/הרשאות/פריסה.'); })
+      .finally(()=> setTimeout(()=> inputs.forEach(el=>el.disabled=false), 900));
     });
   </script>
 </body>
