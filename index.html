@@ -208,7 +208,8 @@
 
   <script>
     // ====== CONFIG ======
-    const SCRIPT_URL_POST = 'https://script.google.com/macros/s/AKfycbyoYh09DzjX3mjAuM2g3juHg9ChP7EOfJ9f7dfTecjs0_rlCuejtvJaMpQkUMn8c6Bf/exec';
+    // כתובת הפריסה החדשה
+    const SCRIPT_URL_POST = 'https://script.google.com/macros/s/AKfycbzoG9GYKNEjs2casZkfOHZGt0qX4at9Gq8nmkJaho7LxXSTdZMD3U0ALDsNHvfQdRKZ/exec';
 
     const isFileOrigin = (location.origin === 'null') || (location.protocol === 'file:');
     const corsWarning = document.getElementById('corsWarning');
@@ -294,7 +295,7 @@
       if(isFileOrigin) return showMsg(false,'אי אפשר לשלוח מתוך file://. פתח דרך http/https.');
       if(!validateForm()) return;
 
-      // client timestamp (אופציונלי — השרת ממילא מוסיף משלו)
+      // client timestamp
       const now=new Date(), pad=n=>String(n).padStart(2,'0');
       const ts=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
       document.getElementById('timestampInput').value = ts;
