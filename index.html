@@ -27,7 +27,10 @@
     textarea{min-height:92px;resize:vertical}
     .hint{display:block;color:var(--muted);font-size:12px;margin-top:4px}
     .grid{display:grid;gap:14px}
-    @media(min-width:720px){.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:1fr 1fr 1fr}}
+    @media(min-width:720px){
+      .cols-2{grid-template-columns:1fr 1fr}
+      .cols-3{grid-template-columns:1fr 1fr 1fr}
+    }
     fieldset{border:1px solid var(--ring);border-radius:10px;padding:12px 12px 8px;margin:0}
     legend{padding:0 6px;font-size:14px;color:var(--prime-2)}
     .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -108,7 +111,7 @@
         </label>
       </div>
 
-      <div class="grid cols-2">
+      <div class="grid cols-3">
         <label>
           <span>הגוף התוקף</span>
           <input type="text" name="attacker" placeholder="ארגון/גוף/חשבון">
@@ -116,6 +119,10 @@
         <label>
           <span>הגוף המותקף</span>
           <input type="text" name="target" placeholder="ארגון/גוף/יעד">
+        </label>
+        <label>
+          <span>מקור</span>
+          <input type="text" name="source" id="sourceInput" placeholder="מקור הידיעה">
         </label>
       </div>
 
